@@ -1,0 +1,6 @@
+asgiref
+backports.zoneinfo
+Django
+Pillow
+sqlparse
+typing-extensions
