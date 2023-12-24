@@ -11,19 +11,18 @@ def store(request):
     return render(request, 'store/store.html', context)
 
 
-def cart(request,obj):
+def cart(request):
     user = request.user.customer
-    order , created =Order.objects.get_or_create(customer=user , complete = False)
-    item= order.orderitems_set.all(uid=obj)
-    orderitems=OrderItems.objects.create(
-        product=order , created,
-        order=items
-        )
-    context={'items':item, 'order':order}
+    order, _ = Order.objects.get_or_create(customer=user, complete=False)
+    items = order.orderitems_set.all()
 
+    # If you need to add new products to the order, you would do it here.
+    # For example, adding a product to the order:
+    # new_product = Product.objects.get(id=some_product_id)
+    # OrderItems.objects.create(product=new_product, order=order)
 
-    return render(request, 'store/cart.html',context)
-
+    context = {'items': items, 'order': order}
+    return render(request, 'store/cart.html', context)
 
 def checkout(request):
     user = request.user.customer

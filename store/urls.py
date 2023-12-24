@@ -8,5 +8,5 @@ urlpatterns = [
 
     path('cart/', cart, name='cart'),
     path("checkout/", checkout, name='checkout'),
-    path('add-card/<obj_uid>', cart , name='add-card'),
+
 ]
