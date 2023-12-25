@@ -9,7 +9,7 @@
                 <h6><strong>{{product.name}}</strong></h6>
                 <hr>
 
-                <a href="#" class="btn btn-outline-secondary add-btn">Add to Cart</a>
+                <a href="{% url 'add-cart' product_id=product.id %}" class="btn btn-outline-secondary add-btn">Add to Cart</a>
                 <a class="btn btn-outline-success" href="#">View</a>
                 <h4 style="display: inline-block; float: right"><strong>${{product.price}}</strong></h4>
 

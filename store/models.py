@@ -28,7 +28,7 @@ class Order(models.Model):
     transition_id = models.CharField(max_length=50)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.customer)
 
     @property
     def get_cart_total(self):
