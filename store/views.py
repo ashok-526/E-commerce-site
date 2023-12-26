@@ -48,8 +48,25 @@ def add_cart(request, product_id):
         print("cart_item:", cart_item)
         print("done")
 
-    # Redirect to some page, e.g., the cart overview page
     return redirect('/')
+
+
+def click(request, item_id): ## while clicking it calls thisfunction
+    cart_item = get_object_or_404(OrderItems, id=item_id)
+    cart_item.quantity += 1
+    cart_item.save()
+
+    return redirect('/cart')
+
+
+def unclick(request, item_id):
+    cart_item = get_object_or_404(OrderItems, id=item_id)
+    if cart_item.quantity > 0:
+        cart_item.quantity -= 1
+        cart_item.save()
+
+        return redirect('/cart')
+    # Redirect to some page, e.g., the cart overview page
 
 
 def checkout(request):
