@@ -50,8 +50,10 @@ def add_cart(request, product_id):
 
     return redirect('/')
 
+# can do this in models and call directly like cartitem.click() then all same other
 
-def click(request, item_id): ## while clicking it calls thisfunction
+
+def click(request, item_id):  # while clicking it calls thisfunction
     cart_item = get_object_or_404(OrderItems, id=item_id)
     cart_item.quantity += 1
     cart_item.save()
