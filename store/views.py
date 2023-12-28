@@ -6,8 +6,12 @@ from django.contrib.auth.models import User
 
 
 def store(request):
+    user = request.user.customer
+    order, _ = Order.objects.get_or_create(customer=user, complete=False)
+    items = order.orderitems_set.all()
+    cart_item = order.get_cart_quantity
     product = Product.objects.all()
-    context = {'product': product}
+    context = {'product': product, 'cart_item':cart_item}
     return render(request, 'store/store.html', context)
 
 
@@ -15,18 +19,39 @@ def cart(request):
     user = request.user.customer
     order, _ = Order.objects.get_or_create(customer=user, complete=False)
     items = order.orderitems_set.all()
+    cart_item = order.get_cart_quantity
     print("user", user)
     print("order", order)
     print("items", items)
+
+
 
     # If you need to add new products to the order, you would do it here.
     # For example, adding a product to the order:
     # new_product = Product.objects.get(id=some_product_id)
     # OrderItems.objects.create(product=new_product, order=order)
 
-    context = {'items': items, 'order': order}
+    context = {'items': items, 'order': order , 'cart_item':cart_item}
     return render(request, 'store/cart.html', context)
 
+def click(request, item_id):
+    cart_item = get_object_or_404(OrderItems, id=item_id)
+    if cart_item.quantity > 0:
+        cart_item.quantity+=1
+        cart_item.save()
+
+        return redirect('/cart')
+
+def unclick(request,item_id):
+    cart_item = get_object_or_404(OrderItems, id=item_id)
+    if cart_item.quantity > 1:
+        cart_item.quantity-=1
+        cart_item.save()
+
+    elif cart_item.quantity == 1 :
+        cart_item.delete()
+
+    return redirect('/cart')
 
 def add_cart(request, product_id):
     user = request.user.customer
@@ -60,7 +85,7 @@ def checkout(request):
     but the upper one get_or_create doesnot raise erroe instead of error it create order if doesnot exits
     '''
     item = order.orderitems_set.all()
-
-    context = {'items': item, 'order': order}
+    cart_item = order.get_cart_quantity
+    context = {'items': item, 'order': order, 'cart_item':cart_item}
 
     return render(request, 'store/checkout.html', context)

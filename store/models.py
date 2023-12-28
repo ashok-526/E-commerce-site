@@ -16,6 +16,7 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     price = models.IntegerField()
     image = models.ImageField(upload_to='product-image', null=True, blank=True)
+    digital = models.BooleanField(default=False , null=True , blank=False)
 
     def __str__(self):
         return self.name
@@ -46,6 +47,14 @@ class Order(models.Model):
         orderitems=self.orderitems_set.all()
         total = sum([items.quantity for items in orderitems])
         return total
+    @property
+    def shipping(self):
+        shipping = False
+        orderitems=self.orderitems_set.all()
+        for i in orderitems:
+            if i.product.digital == False:
+                shipping = True
+        return shipping
 
 class OrderItems(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
@@ -55,10 +64,15 @@ class OrderItems(models.Model):
 
     def __str__(self):
         return str(self.product)
+
+
+
     @property
     def get_total(self):
         total=self.product.price * self.quantity
         return total
+
+
 
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
