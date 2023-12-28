@@ -2,8 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
 
+
 class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=50)
     email = models.EmailField()
 
@@ -23,7 +25,8 @@ class Product(models.Model):
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+    customer = models.ForeignKey(
+        Customer, on_delete=models.SET_NULL, null=True)
     date_order = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField()
     transition_id = models.CharField(max_length=50)
@@ -33,18 +36,19 @@ class Order(models.Model):
 
     @property
     def get_cart_total(self):
-        orderitems=self.orderitems_set.all()
+        orderitems = self.orderitems_set.all()
         '''
         total=0
         for i in orderitems:
             total+=i.get_total
         return total
 '''
-        total=sum([i.get_total for i in orderitems])
+        total = sum([i.get_total for i in orderitems])
         return total
+
     @property
     def get_cart_quantity(self):
-        orderitems=self.orderitems_set.all()
+        orderitems = self.orderitems_set.all()
         total = sum([items.quantity for items in orderitems])
         return total
     @property
@@ -56,27 +60,38 @@ class Order(models.Model):
                 shipping = True
         return shipping
 
+
 class OrderItems(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
-    quantity = models.IntegerField(default=0, blank=True ,null=True)
+    product = models.ForeignKey(
+        Product, on_delete=models.SET_NULL, null=True, blank=True)
+    order = models.ForeignKey(
+        Order, on_delete=models.SET_NULL, null=True, blank=True)
+    quantity = models.IntegerField(default=0, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.product)
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 3120c14ab0bd31570ba7b332eaf7f47631b7eb44
     @property
     def get_total(self):
-        total=self.product.price * self.quantity
+        total = self.product.price * self.quantity
         return total
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3120c14ab0bd31570ba7b332eaf7f47631b7eb44
 class ShippingAddress(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
+    customer = models.ForeignKey(
+        Customer, on_delete=models.SET_NULL, null=True, blank=True)
+    order = models.ForeignKey(
+        Order, on_delete=models.SET_NULL, null=True, blank=True)
     Address = models.CharField(max_length=100)
     city = models.CharField(max_length=50)
     zipcode = models.IntegerField()
