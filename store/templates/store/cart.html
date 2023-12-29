@@ -42,7 +42,7 @@
                     <div style="flex:2"><p>{{items.product.name}}</p></div>
                     <div style="flex:1"><p>${{items.product.price}}</p></div>
                     <div style="flex:1">
-<<<<<<< HEAD
+
                         <p class="quantity">{{items.quantity}}</p>
                         <div class="quantity">
                             <a href="{% url 'click' items.id %}">
@@ -50,17 +50,8 @@
                             <a href="{% url 'unclick' items.id %}">
                             <img class="chg-quantity" src="{% static  'images/arrow-down.png' %}"></a>
                         </div>
-=======
-            <p class="quantity">{{items.quantity}}</p>
-            <div class="quantity">
-                <a href="{% url 'click' item_id=items.id %}">
-                    <img class="chg-quantity" src="{% static  'images/arrow-up.png' %}">
-                </a>
-                <a href="{% url 'unclick' item_id=items.id %}">
-                    <img class="chg-quantity" src="{% static  'images/arrow-down.png' %}">
-                </a>
-            </div>
->>>>>>> 3120c14ab0bd31570ba7b332eaf7f47631b7eb44
+
+
                     </div>
                     <div style="flex:1"><p>${{items.get_total}}</p></div>
                 </div>

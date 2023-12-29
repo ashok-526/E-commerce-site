@@ -11,12 +11,8 @@ def store(request):
     items = order.orderitems_set.all()
     cart_item = order.get_cart_quantity
     product = Product.objects.all()
-<<<<<<< HEAD
-    context = {'product': product, 'cart_item':cart_item}
-=======
 
     context = {'product': product, 'cart_item': cart_item}
->>>>>>> 3120c14ab0bd31570ba7b332eaf7f47631b7eb44
     return render(request, 'store/store.html', context)
 
 
@@ -29,38 +25,36 @@ def cart(request):
     print("order", order)
     print("items", items)
 
-
-
     # If you need to add new products to the order, you would do it here.
     # For example, adding a product to the order:
     # new_product = Product.objects.get(id=some_product_id)
     # OrderItems.objects.create(product=new_product, order=order)
 
-<<<<<<< HEAD
-    context = {'items': items, 'order': order , 'cart_item':cart_item}
-=======
     context = {'items': items, 'order': order, 'cart_item': cart_item}
->>>>>>> 3120c14ab0bd31570ba7b332eaf7f47631b7eb44
+
     return render(request, 'store/cart.html', context)
+
 
 def click(request, item_id):
     cart_item = get_object_or_404(OrderItems, id=item_id)
     if cart_item.quantity > 0:
-        cart_item.quantity+=1
+        cart_item.quantity += 1
         cart_item.save()
 
         return redirect('/cart')
 
-def unclick(request,item_id):
+
+def unclick(request, item_id):
     cart_item = get_object_or_404(OrderItems, id=item_id)
     if cart_item.quantity > 1:
-        cart_item.quantity-=1
+        cart_item.quantity -= 1
         cart_item.save()
 
-    elif cart_item.quantity == 1 :
+    elif cart_item.quantity == 1:
         cart_item.delete()
 
     return redirect('/cart')
+
 
 def add_cart(request, product_id):
     user = request.user.customer
@@ -87,24 +81,25 @@ def add_cart(request, product_id):
 # can do this in models and call directly like cartitem.click() then all same other
 
 
-def click(request, item_id):  # while clicking it calls thisfunction
+def click(request, item_id):
     cart_item = get_object_or_404(OrderItems, id=item_id)
-    cart_item.quantity += 1
-    cart_item.save()
+    if cart_item.quantity > 0:
+        cart_item.quantity += 1
+        cart_item.save()
 
-    return redirect('/cart')
+        return redirect('/cart')
 
 
 def unclick(request, item_id):
     cart_item = get_object_or_404(OrderItems, id=item_id)
-    if cart_item.quantity > 0:
+    if cart_item.quantity > 1:
         cart_item.quantity -= 1
         cart_item.save()
-        return redirect('/cart')
-    else:
 
-        return redirect('/cart')
-    # Redirect to some page, e.g., the cart overview page
+    elif cart_item.quantity == 1:
+        cart_item.delete()
+
+    return redirect('/cart')
 
 
 def checkout(request):
@@ -116,11 +111,7 @@ def checkout(request):
     '''
     item = order.orderitems_set.all()
     cart_item = order.get_cart_quantity
-<<<<<<< HEAD
-    context = {'items': item, 'order': order, 'cart_item':cart_item}
-=======
 
     context = {'items': item, 'order': order, 'cart_item': cart_item}
->>>>>>> 3120c14ab0bd31570ba7b332eaf7f47631b7eb44
 
     return render(request, 'store/checkout.html', context)
