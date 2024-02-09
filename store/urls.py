@@ -12,5 +12,7 @@ urlpatterns = [
     path("checkout/", checkout, name='checkout'),
     path('click/<int:item_id>/', click, name='click'),
     path('unclick/<int:item_id>/', unclick, name='unclick'),
+    path('payment/', payment_process, name='payment'),
+
 
 ]

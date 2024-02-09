@@ -1,0 +1,130 @@
+{% extends 'store/main.html' %}
+{% block start %}
+<style>
+  /* Your existing CSS styles here */
+  .StripeElement {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 10px 12px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: white;
+    box-shadow: 0 1px 3px 0 #e6ebf1;
+    -webkit-transition:box-shadow 150ms ease;
+    transition: box-shadow 150ms ease;
+  }
+
+  .StripeElement--focus{
+    box-shadow: 0 1px 3px 0 #cfd7df;
+
+  }
+  .StripeElement--invalid{
+    border-color: #fa755a;
+  }
+  .StripeElement--webkit-autofill{
+    background-color: #fefde5 !important;}
+  }
+
+</style>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-lg-6">
+      <h3>Why Become Pro?</h3>
+      <p>Upgrade your membership for exclusive benefits.</p>
+
+      <form id="payment-form" method="post">
+        {% csrf_token %}
+        <div class="form-group mb-1">
+          <label for="membership">Payment</label>
+          <label>Total Quantity:{{order.get_cart_quantity}}
+          <label>Total Cost:{{order.get_cart_total}}
+          </select>
+        </div>
+        <div>
+          <label for="card-element">Credit or Debit Card</label>
+          <div id="card-element" class="StripeElement">
+            <!-- A Stripe Element will be inserted here. -->
+          </div>
+          <!-- Used to display form errors. -->
+          <div id="card-errors" role="alert"></div>
+        </div>
+        <button id="submit-button" class="btn btn-primary mt-3">Pay</button>
+      </form>
+    </div>
+    <div class="col-lg-6 mt-4">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr9YkmUnPAr_gpUT6mPAO9ewIgXk77uhVfAQ&usqp=CAU" class="img-fluid" alt="Pro Membership">
+    </div>
+  </div>
+</div>
+
+<script>
+
+var stripe=Stripe("pk_test_51Nrdg6HOKyBJ9R4uzOYLu8fVHrDkIEieBlOfQ8rVhl9PXby6n8p5N3BWeCt1nCknXNEv8G0ssWN7ECzlN0XjZ8cG00swVsYSGj");
+
+var elements=stripe.elements();
+
+var style={
+    base:{
+        color:"#32325d",
+        fontFamily:"sans-serif",
+        fontsmoothing:"antialiased",
+        fontsize:"16px",
+        '::placeholder':{
+            color:"#aab7c4"
+        }
+    },
+    invalid:{
+        color:"#fa755a",
+        iconcolor:"#fa755a"
+    }
+};
+
+var card=elements.create("card",{style:style});
+
+card.mount("#card-element");
+
+card.on('change',function(event){
+    var displayError=document.getElementById('card-errors');
+    if(event.error){
+        displayError.textContent=event.error.message;
+
+
+    }else{
+        displayError.textContent = '';
+    }
+});
+
+var form=document.getElementById('payment-form');
+form.addEventListener('submit',function(event){
+    event.preventDefault();
+    stripe.createToken(card).then(function(result){
+        if(result.error){
+            var errorElement=document.getElementById('card-errors');
+            errorElement.textContent=result.error.message;
+        }
+        else{
+            stripeTokenHandler(result.token);
+        }
+        });
+
+    });
+function stripeTokenHandler(token){
+    var form = document.getElementById('payment-form');
+    var hiddenInput=document.createElement('input');
+    hiddenInput.setAttribute('type','hidden');
+    hiddenInput.setAttribute('name','stripeToken');
+    hiddenInput.setAttribute('value',token.id);
+    form.appendChild(hiddenInput);
+
+    form.submit();
+
+}
+
+
+</script>
+
+
+{% endblock %}

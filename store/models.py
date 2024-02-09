@@ -27,7 +27,7 @@ class Product(models.Model):
 class Order(models.Model):
     customer = models.ForeignKey(
         Customer, on_delete=models.SET_NULL, null=True)
-    date_order = models.DateTimeField(auto_now_add=True)
+    date_orde = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField()
     transition_id = models.CharField(max_length=50)
 

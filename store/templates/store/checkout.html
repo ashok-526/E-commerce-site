@@ -35,9 +35,7 @@
                         <div class="form-field">
                             <input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
                         </div>
-                        <div class="form-field">
-                            <input class="form-control" type="text" name="country" placeholder="Zip code..">
-                        </div>
+
                     </div>
 {% endif %}
                     <hr>
@@ -48,7 +46,8 @@
 
 <div class="box-element hidden" id="payment-info">
     <small>Paypal Options</small>
-    <button id='make-payment'>Payment</button>
+    <a href="{% url 'payment' %}">
+    <button id='make-payment'>Payment</button></a>
 </div>
 
         </div>
@@ -95,19 +94,19 @@
     document.getElementById('form-button').classList.add('hidden');
     document.getElementById('payment-info').classList.remove('hidden');
   });
-     var paymentButton = document.getElementById('make-payment');
- paymentButton.addEventListener('submit',function () {
-//     console.log('Payment button clicked');
+//      var paymentButton = document.getElementById('make-payment');
+//  paymentButton.addEventListener('submit',function () {
+// //     console.log('Payment button clicked');
 
     // body...
- });
+ // });
 
-var paymentButton = document.getElementById('make-payment');
-paymentButton.addEventListener('click', function() {
-    // Logic to handle payment
-    console.log('Payment button clicked');
-    form.submit();
-    });
+// var paymentButton = document.getElementById('make-payment');
+// paymentButton.addEventListener('click', function() {
+//     // Logic to handle payment
+//     console.log('Payment button clicked');
+//     form.submit();
+//     });
     // Example: Submit the form data
     // form.submit();
 // document.getElementById('make-payment').addEventListener('click',function(e){

@@ -1,0 +1,40 @@
+{% extends 'store/main.html' %}
+
+{% block start %}
+<style>
+    /* CSS for styling the "Thanks for payment" section */
+    .thanks-section {
+        text-align: center;
+        margin-top: 5rem;
+        padding: 2rem;
+        background-color: #f7f7f7; /* Light gray background color */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Box shadow for a subtle lift */
+    }
+
+    .thanks-message {
+        font-size: 24px; /* Larger font size for the message */
+        font-weight: bold;
+        color: #333; /* Dark gray text color */
+    }
+
+    .home-button {
+        margin-top: 1rem;
+        text-decoration: none; /* Remove underline from the button */
+        color: #fff; /* White text color */
+        background-color: #28a745; /* Green button background color */
+        padding: 10px 20px;
+        border-radius: 5px; /* Rounded button corners */
+        transition: background-color 0.3s; /* Smooth transition on hover */
+    }
+
+    .home-button:hover {
+        background-color: #218838; /* Darker green on hover */
+    }
+</style>
+
+<div class="thanks-section">
+    <p class="thanks-message">Thanks for your payment!</p>
+    <a href="/" class="btn btn-success home-button">Home</a>
+</div>
+{% endblock %}

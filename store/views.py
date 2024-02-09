@@ -3,8 +3,9 @@ from .models import *
 from django.contrib import messages
 from django.db.models import Sum
 from django.contrib.auth.models import User
+import datetime
+import stripe
 # Create your views here.
-
 
 def store(request):
     # Initialize variables
@@ -110,7 +111,9 @@ def checkout(request):
         order, created = Order.objects.get_or_create(
             customer=user, complete=False)
         items = order.orderitems_set.all()
+        print(items)
         cart_item = order.get_cart_quantity
+        cart_total = order.get_cart_total
         shipping = order.shipping
     else:
         items = []
@@ -124,7 +127,7 @@ def checkout(request):
         Address = request.POST.get("address")
         city = request.POST.get("city")
         zipcode = request.POST.get("zipcode")
-        state = request.POST.get("country")
+        state = request.POST.get("state")
 
         if request.user.is_authenticated and shipping != False:
             customer = request.user.customer
@@ -140,3 +143,50 @@ def checkout(request):
 
     context = {'items': items, 'order': order, 'cart_item': cart_item}
     return render(request, 'store/checkout.html', context)
+
+
+from stripe.error import CardError
+
+def payment_process(request):
+    if request.user.is_authenticated:
+        user = request.user.customer
+        order, created = Order.objects.get_or_create(customer=user, complete=False)
+        amount = order.get_cart_total  # Ensure this is in cents for Stripe
+
+        stripe.api_key = "sk_test_51Nrdg6HOKyBJ9R4uHTuykRR1HVr2ZXWpipXWiyLWCT5RhNEvyUK3BkJOJBkTi6IT3t38tBSnKF1IkcXRDAuuJNwV00qO8ArHUg"
+
+        # Ensure you have a Stripe customer ID associated with your user
+        stripe_customer_id = user.stripe_customer_id  # Replace with your way of storing/fetching the Stripe customer ID
+
+        if not stripe_customer_id:
+            # Create a Stripe Customer if not exists
+            customer = stripe.Customer.create(
+                email=user.email,
+                # other details
+            )
+            stripe_customer_id = customer.id
+            # Store this customer ID in your database for future reference
+
+        try:
+            # Create a PaymentIntent with the Stripe Customer ID
+            intent = stripe.PaymentIntent.create(
+                amount=amount,
+                currency='usd',
+                customer=stripe_customer_id,
+                payment_method=request.POST.get('payment_method_id'),
+                confirm=True,
+            )
+
+            if intent.status == 'succeeded':
+                # Handle post-payment fulfillment
+                order.complete = True
+                order.save()
+                return redirect('/success_page')
+
+        except stripe.error.StripeError as e:
+            # Handle Stripe exceptions appropriately
+            print(e)
+
+    return render(request, 'payment.html')
+
+
