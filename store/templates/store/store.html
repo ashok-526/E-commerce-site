@@ -1,24 +1,333 @@
 {% extends 'store/main.html' %}
 {% load static %}
 {% block content %}
-    <div class="row">
-        {% for product in product %}
-        <div class="col-lg-4">
-            <img class="thumbnail" src="/images/{{product.image}}">
-            <div class="box-element product">
-                <h6><strong>{{product.name}}</strong></h6>
-                <hr>
 
-                <a href="{% url 'add-cart' product_id=product.id %}" class="btn btn-outline-secondary add-btn">Add to Cart</a>
-                <a class="btn btn-outline-success" href="#">View</a>
-                <h4 style="display: inline-block; float: right"><strong>${{product.price}}</strong></h4>
-
+<html>
+    <head>
+        <link rel="stylesheet" href="static/font-awesome/css/font-awesome.css">
+        <link rel="stylesheet" href="static/css/style.css">
+    </head>
+    <style>
+        .box-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start; /* Align items to the start */
+            gap: 10px; /* This adds space between boxes */
+        }
+        
+        .box {
+            flex: 0 0 30%; /* Do not grow, do not shrink, base width */
+            margin-bottom: 20px; /* Space between rows */
+        }
+        
+        /* For smaller screens, adjust the number of items per row */
+        @media (max-width: 800px) {
+            .box {
+                flex: 0 0 48%; /* 2 items per row for smaller screens */
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .box {
+                flex: 0 0 100%; /* 1 item per row for very small screens */
+            }
+        }
+        #cart-total {
+            position: absolute;
+            top: -10px; /* Adjust as needed */
+            right: -10px; /* Adjust based on the icon's position */
+            background-color: white; /* Or any other color for clean background */
+            {% comment %} border-radius: 50%; /* Circular background */ {% endcomment %}
+            padding: 5px; /* Padding around the number */
+            font-size: 12px; /* Adjust the font size as needed */
+            color: black; /* Font color */
+            {% comment %} border: 1px solid gray; /* Optional: for border */ {% endcomment %}
+        }
+        
+        /* Ensure the parent div of the icons is positioned relatively */
+        .icons {
+            position: relative;
+        }
+        
+        /* Adjust the size and position of the user icon as needed */
+        .fa-user {
+            font-size: 24px; /* Example size */
+            /* Other styling as needed */
+        }
+    </style>
+    <body>
+        <header>
+            <div id="menu-bar" class="fa fa-bars"></div>
+            <a href="#" class="logo">Logo</a>
+            <nav class="navbar">
+                <a href="#home">Home</a>
+                <a href="#product">Product</a>
+                <a href="#fearured">Fearured</a>
+                <a href="#blog">blog</a>
+                <a href="#news">news</a>
+            </nav>
+            <div class="icons">
+                <a href="#"><i class="fa fa-heart"></i></a>
+                <a href="{% url 'cart' %}"><i class="fa fa-shopping-cart"></i></a>
+                <a href="{% url 'login' %}"><i class="fa fa-user"></i></a>
+                <p id="cart-total">{{cart_item}}</p>
             </div>
-        </div>
+        </header>
+        <!--end header-->
+        <section class="home" id="home">
+            <div class="slide-container active">
+                <div class="slide">
+                    <div class="content">
+                        <span>APPLE VISION PRO</span>
+                        <h3>THE FUTURE OF SMART TECHNOLOGY</h3>
+                        <p>
+                            Discover elegance and innovation with Apple Vision Pro.
+                            A blend of sophisticated design and advanced features,
+                            It sets new standards in technology.Embrace a seamless,
+                            high-performance experience.
+                        </p>
 
+                    </div>
+                    <div class="image">
+                        <img src="static/img/slide/1.png" class="shoe">
+                    </div>
+                </div>
+            </div>
+            <div class="slide-container">
+                <div class="slide">
+                    <div class="content">
+                        <span>MACBOOK</span>
+<h3>MacBook Pro</h3>
+<p>
+    Experience innovation at its finest with the MacBook Pro and MacBook Air. 
+    These masterpieces of technology blend sleek design with powerful performance, 
+    embodying the pinnacle of engineering excellence. Perfect for professionals and 
+    creatives alike, they redefine what's possible in a laptop, delivering an unparalleled 
+    user experience with every task.
+</p>
 
+                        {% comment %} <a href="{% url 'add-cart' product_id=product.id %}" class="btn">add to card</a> {% endcomment %}
+                    </div>
+                    <div class="image">
+                        <img src="static/img/slide/2.png" class="shoe">
+                    </div>
+                </div>
+            </div>
+            <div class="slide-container">
+                <div class="slide">
+                    <div class="content">
+                        <span>APPLE AIRPODS</span>
+<h3>Apple AirPods Max</h3>
+<p>
+    Discover the art of pure sound with Apple AirPods and AirPods Max. 
+    These headphones are a testament to Apple's commitment to acoustic excellence. 
+    Immerse yourself in rich, high-fidelity audio and experience unparalleled comfort 
+    and style. Whether you're enjoying music, taking calls, or tuning into a podcast, 
+    Apple's headphones offer a seamless and intuitive listening experience for every moment of your day.
+</p>
 
-        {% endfor %}
-    </div>
+                        {% comment %} <a href="{% url 'add-cart' product_id=product.id %}" class="btn">add to card</a> {% endcomment %}
+                    </div>
+                    <div class="image">
+                        <img src="static/img/slide/3.png" class="shoe">
+                    </div>
+                </div>
+            </div>
+            <div class="slide-container">
+                <div class="slide">
+                    <div class="content">
+                        <span>Apple Mac Studio</span>
+                        <h3>Compact Powerhouse</h3>
+                        <p>
+                            The Apple Mac Studio, a marvel in compact design,
+                            offers unmatched performance for creative professionals.
+                            Experience cutting-edge processing power and exceptional graphics in a sleek, space-efficient form.
+                        </p>
+                        
+                        {% comment %} <a href="{% url 'add-cart' product_id=product.id %}" class="btn">add to card</a> {% endcomment %}
+                    </div>
+                    <div class="image">
+                        <img src="static/img/slide/4.png" class="shoe">
+                    </div>
+                </div>
+            </div>
+
+            <div id="prev" class="fa fa-angle-left" onclick="prev();"></div>
+            <div id="next" class="fa fa-angle-right" onclick="next();"></div>
+        </section>
+        <!--end home-->
+        
+        <section class="product" id="product">
+            <h1 class="heading">latest <span>Products</span></h1>
+            <div class="box-container">
+                {% for product in product %}
+                    <div class="box">
+                        <div class="icons">
+                            <a href="#" class="fa fa-heart"></a>
+                            <a href="{% url 'add-cart' product_id=product.id %}" class="fa fa-shopping-cart"></a>
+                            <a href="#" class="fa fa-eye"></a>
+                        </div>
+                        <div class="content">
+                        
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            <h3>{{ product.name }}</h3>
+                            <div class="price">${{ product.price }}</div>
+                            <!-- Add any other product details here -->
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+        <!--end product-->
+        {% comment %} <section class="featured" id="fearured">
+            <h1 class="heading">New <span>Product</span></h1>
+            <div class="row">
+                {% for product in product %}
+                <div class="image-container">
+                    <div class="small-image">
+                        <img src="static/img/product1/1.jpg" alt="" class="featured-image-1">
+                        <img src="static/img/product1/2.jpg" alt="" class="featured-image-1">
+                        <img src="static/img/product1/3.jpg" alt="" class="featured-image-1">
+                        <img src="static/img/product1/4.jpg" alt="" class="featured-image-1">
+                    </div>
+                    <div class="big-image">
+                        <img src="static/img/product1/1.jpg" alt="" class="big-image-1">
+                    </div>
+                </div>
+                <div class="content">
+                    <h3>new nike airmac shoes</h3>
+                    <div class="stars">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                        Fugit officiis omnis quo laboriosam velit culpa ex illo, error enim nostrum?
+                    </p>
+                    <div class="price">$90 <span>$120</span></div>
+                    <a href="{% url 'add-cart' product_id=product.id %}" class="btn">add to cart</a>
+                </div>
+            
+            {% endfor %}
+            
+        </section> {% endcomment %}
+        <!--end featured-->
+        <section class="blog" id="blog">
+            
+            <h1 class="heading">Team <span>Weblog</span></h1>
+            <div class="box-container">
+                <div class="box">
+                    <img src="static/img/team/1.png" alt="">
+                    <h3>Bimarsh Pandey</h3>
+                    <p>
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
+                        Eos sequi temporibus impedit corporis vero ab exercitationem 
+                        dolore voluptatibus, nisi non.
+                    </p>
+                    <div class="stars">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-o"></i>
+                        <i class="fa fa fa-star-half-o"></i>
+                    </div>
+                </div>
+                <div class="box">
+                    <img src="static/img/team/2.png" alt="">
+                    <h3>Ashok Gaire</h3>
+                    <p>
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
+                        Eos sequi temporibus impedit corporis vero ab exercitationem 
+                        dolore voluptatibus, nisi non.
+                    </p>
+                    <div class="stars">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa fa-star"></i>
+                    </div>
+                </div>
+                <div class="box">
+                    <img src="static/img/team/3.png" alt="">
+                    <h3>Swikar Kharal</h3>
+                    <p>
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
+                        Eos sequi temporibus impedit corporis vero ab exercitationem 
+                        dolore voluptatibus, nisi non.
+                    </p>
+                    <div class="stars">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-o"></i>
+                        <i class="fa fa fa-star-half-o"></i>
+                    </div>
+                </div>
+                <div class="box">
+                    <img src="static/img/team/4.png" alt="">
+                    <h3>Arpan Paudeyl</h3>
+                    <p>
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
+                        Eos sequi temporibus impedit corporis vero ab exercitationem 
+                        dolore voluptatibus, nisi non.
+                    </p>
+                    <div class="stars">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-o"></i>
+                        <i class="fa fa fa-star-half-o"></i>
+                    </div>
+                </div>
+                <div class="box">
+                    <img src="static/img/team/5.png" alt="">
+                    <h3>Apil Gaire</h3>
+                    <p>
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
+                        Eos sequi temporibus impedit corporis vero ab exercitationem 
+                        dolore voluptatibus, nisi non.
+                    </p>
+                    <div class="stars">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-o"></i>
+                        <i class="fa fa fa-star-half-o"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--end blog-->
+        <section class="news" id="news">
+            <div class="content">
+                <h3>monthly news letter</h3>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                    Fuga sed itaque ducimus maxime facere nihil expedita non sunt? Nostrum, voluptatem?
+                </p>
+                <form action="">
+                    <input type="email" placeholder="please enter your email" class="email">
+                    <input type="submit" value="save" class="btn">
+                </form>
+            </div>
+        </section>
+        <!--end news-->
+        <section class="cridet" id="cridet">
+            <div class="box">
+                <h3>all reserved by codeskill</h3>
+            </div>
+            
+        </section>
+    </body>
+</html>
+
+<script src="static/js/script.js">
+
+</script>
+
 
 {% endblock content %}

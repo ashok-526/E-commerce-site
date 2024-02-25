@@ -46,8 +46,10 @@
 
 <div class="box-element hidden" id="payment-info">
     <small>Paypal Options</small>
-    <a href="{% url 'payment' %}">
-    <button id='make-payment'>Payment</button></a>
+    {% comment %} <a href="{% url 'payment' %}"> {% endcomment %}
+        <a href="{% url 'payment' %}">
+
+        <button type="submit">Payment</button></a>
 </div>
 
         </div>
@@ -73,6 +75,8 @@
 
         </div>
     </div>
+
+   
 <script>
 //     var shipping = '{{order.shipping}}'
 //     var user = '{{user}}'

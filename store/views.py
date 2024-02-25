@@ -1,11 +1,69 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.contrib import messages
+from django.contrib.auth import authenticate, login as auth_login
 from django.db.models import Sum
 from django.contrib.auth.models import User
 import datetime
 import stripe
+import requests
 # Create your views here.
+
+
+# def login(request):
+#     if request.method=='POST':
+#         username=request.POST.get('username')
+#         password=request.get('password')
+
+#         user= User.objects.filter(username=username).first()
+
+#         if not user:
+#             messages.error("User name doesnot exist!")
+#             return redirect('/login/')
+#         else
+
+#     return render(request , 'store/login.html')
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password1')
+
+        user = authenticate(username=username, password=password)
+        customer=Customer.objects.create(
+            name=username,
+            email=email
+
+        )
+
+        if user is not None:
+            auth_login(request, user)  # Use auth_login to avoid naming conflict
+            return redirect('/')
+        else:
+            messages.error(request, "Invalid username or password!")
+            return redirect('/login/')
+
+    return render(request, 'store/login.html')
+def register(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        password = request.POST.get('password1')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists!")
+            return redirect('/register')
+        elif User.objects.filter(email=email).exists():
+            messages.error(request, "Email already used!")
+            return redirect('/register')
+        else:
+            user = User.objects.create_user(username=username, email=email, password=password)
+            Customer.objects.create(user=user)  # Create Customer profile
+
+            messages.success(request, "Account created successfully")
+            return redirect('/login')
+
+    return render(request, 'store/register.html')
 
 def store(request):
     # Initialize variables
@@ -35,6 +93,7 @@ def cart(request):
 
     if request.user.is_authenticated:
         user = request.user.customer
+        
         order, _ = Order.objects.get_or_create(customer=user, complete=False)
         items = order.orderitems_set.all()
         cart_item = order.get_cart_quantity
@@ -145,48 +204,96 @@ def checkout(request):
     return render(request, 'store/checkout.html', context)
 
 
-from stripe.error import CardError
 
-def payment_process(request):
-    if request.user.is_authenticated:
-        user = request.user.customer
-        order, created = Order.objects.get_or_create(customer=user, complete=False)
-        amount = order.get_cart_total  # Ensure this is in cents for Stripe
 
-        stripe.api_key = "sk_test_51Nrdg6HOKyBJ9R4uHTuykRR1HVr2ZXWpipXWiyLWCT5RhNEvyUK3BkJOJBkTi6IT3t38tBSnKF1IkcXRDAuuJNwV00qO8ArHUg"
+# from stripe.error import CardError
 
-        # Ensure you have a Stripe customer ID associated with your user
-        stripe_customer_id = user.stripe_customer_id  # Replace with your way of storing/fetching the Stripe customer ID
+# def payment_process(request):
+#     if request.user.is_authenticated:
+#         user = request.user.customer
+#         order, created = Order.objects.get_or_create(customer=user, complete=False)
+#         amount = order.get_cart_total  # Ensure this is in cents for Stripe
 
-        if not stripe_customer_id:
-            # Create a Stripe Customer if not exists
-            customer = stripe.Customer.create(
-                email=user.email,
-                # other details
-            )
-            stripe_customer_id = customer.id
-            # Store this customer ID in your database for future reference
+#         stripe.api_key = "sk_test_51Nrdg6HOKyBJ9R4uHTuykRR1HVr2ZXWpipXWiyLWCT5RhNEvyUK3BkJOJBkTi6IT3t38tBSnKF1IkcXRDAuuJNwV00qO8ArHUg"
 
-        try:
-            # Create a PaymentIntent with the Stripe Customer ID
-            intent = stripe.PaymentIntent.create(
-                amount=amount,
-                currency='usd',
-                customer=stripe_customer_id,
-                payment_method=request.POST.get('payment_method_id'),
-                confirm=True,
-            )
+#         # Ensure you have a Stripe customer ID associated with your user
+#         stripe_customer_id = user.stripe_customer_id  # Replace with your way of storing/fetching the Stripe customer ID
 
-            if intent.status == 'succeeded':
-                # Handle post-payment fulfillment
-                order.complete = True
-                order.save()
-                return redirect('/success_page')
+#         if not stripe_customer_id:
+#             # Create a Stripe Customer if not exists
+#             customer = stripe.Customer.create(
+#                 email=user.email,
+#                 # other details
+#             )
+#             stripe_customer_id = customer.id
+#             # Store this customer ID in your database for future reference
 
-        except stripe.error.StripeError as e:
-            # Handle Stripe exceptions appropriately
-            print(e)
+#         try:
+#             # Create a PaymentIntent with the Stripe Customer ID
+#             intent = stripe.PaymentIntent.create(
+#                 amount=amount,
+#                 currency='usd',
+#                 customer=stripe_customer_id,
+#                 payment_method=request.POST.get('payment_method_id'),
+#                 confirm=True,
+#             )
 
-    return render(request, 'payment.html')
+#             if intent.status == 'succeeded':
+#                 # Handle post-payment fulfillment
+#                 order.complete = True
+#                 order.save()
+#                 return redirect('/success_page')
 
+#         except stripe.error.StripeError as e:
+#             # Handle Stripe exceptions appropriately
+#             print(e)
+
+#     return render(request, 'payment.html')
+
+import uuid
+from django.shortcuts import render
+
+def Esewa(request):
+    user = request.user.customer
+   
+    # Get the cart and calculate total
+    order, _ = Order.objects.get_or_create(customer=user, complete=False)
+    total = order.get_cart_total
+    qt=order.get_cart_quantity
+
+    # Generate a UUID
+    uid = uuid.uuid4()
+    
+    # Pass total and uid to the template context
+    context = {'total1': total, 'uid': uid, 'qt' : qt}
+
+    # Only proceed if the request is a POST request
+    if request.method == "POST":
+        url = "https://uat.esewa.com.np/epay/transrec"
+        data = {
+            'amt': total,
+            'scd': 'EPAYTEST',
+            'rid': request.GET.get('refid'),
+            'pid': uid
+        }
+        
+        resp = requests.post(url, data=data)
+        
+        if resp.status_code == 200 and resp.text == 'success':
+            # Perform the following actions within a transaction
+                # Add cart items to the cart
+                # (Assuming you have a method to add items to the cart)
+                # cart.add_items(...) 
+                
+                # Mark the cart as paid and save it
+                if not order.complete:
+                    order.complete = True
+                    order.esewa = request.GET.get('oid')
+                    order.save()
+
+            # Redirect after successful payment
+                return redirect("/")  # replace "success_url" with your success URL
+
+    # Render the payment template with the context
+    return render(request, 'store/payment.html', context)
 
