@@ -14,6 +14,7 @@ urlpatterns = [
     path('cart/', cart, name='cart'),
     path("checkout/", checkout, name='checkout'),
     path('click/<int:item_id>/', click, name='click'),
+     path('logout/', logout_view, name='logout'),
     path('unclick/<int:item_id>/', unclick, name='unclick'),
    # path('login/', login , name='login')
 

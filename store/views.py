@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login ,logout
 from django.db.models import Sum
 from django.contrib.auth.models import User
 import datetime
@@ -24,44 +24,48 @@ import requests
 
 #     return render(request , 'store/login.html')
 def login(request):
+    # Check if the user is already logged in
+    if request.user.is_authenticated:
+        messages.info(request, "You are already logged in!")
+        return redirect('/')  # Redirect to homepage or any other page
+
     if request.method == 'POST':
         username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password1')
+        password = request.POST.get('password')
 
         user = authenticate(username=username, password=password)
-        customer=Customer.objects.create(
-            name=username,
-            email=email
-
-        )
-
         if user is not None:
-            auth_login(request, user)  # Use auth_login to avoid naming conflict
+            auth_login(request, user)
             return redirect('/')
         else:
             messages.error(request, "Invalid username or password!")
-            return redirect('/login/')
+            return redirect('login')
 
     return render(request, 'store/login.html')
 def register(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         username = request.POST.get('username')
-        password = request.POST.get('password1')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+
+        # Basic validation
+        if password1 != password2:
+            messages.error(request, "Passwords do not match!")
+            return redirect('register')
 
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists!")
-            return redirect('/register')
+            return redirect('register')
         elif User.objects.filter(email=email).exists():
             messages.error(request, "Email already used!")
-            return redirect('/register')
+            return redirect('register')
         else:
-            user = User.objects.create_user(username=username, email=email, password=password)
-            Customer.objects.create(user=user)  # Create Customer profile
+            user = User.objects.create_user(username=username, email=email, password=password1)
+            Customer.objects.create(user=user, name=username, email=email)  # Ensure fields match your Customer model
 
-            messages.success(request, "Account created successfully")
-            return redirect('/login')
+            messages.success(request, "Account created successfully! Please log in.")
+            return redirect('login')
 
     return render(request, 'store/register.html')
 
@@ -84,6 +88,10 @@ def store(request):
                'order': order, 'items': items}
     return render(request, 'store/store.html', context)
 
+def logout_view(request):
+    logout(request)
+    messages.success(request, "You have successfully logged out.")
+    return redirect('login')  # Replace 'login' with the name of your login URL
 
 def cart(request):
     # Initialize default values

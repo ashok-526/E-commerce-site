@@ -2,65 +2,190 @@
 {% load static %}
 {% block content %}
 
-    <div class="row">
+<!-- Bootstrap CSS for responsive design -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <div class="col-lg-12">
-            <div class="box-element">
+<!-- Font Awesome for scalable icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-                <a  class="btn btn-outline-dark" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
+<!-- Custom CSS for additional styling -->
+<style>
+    body {
+        background-color: #f1f3f5;
+    }
+    .cart-container {
+        background-color: #ffffff;
+        padding: 60px 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    .continue-btn {
+        font-size: 1.1rem;
+        padding: 12px 24px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .continue-btn:hover {
+        background-color: #343a40;
+        color: #ffffff;
+    }
+    .checkout-btn {
+        font-size: 1.1rem;
+        padding: 12px 24px;
+        transition: transform 0.3s;
+    }
+    .checkout-btn:hover {
+        transform: scale(1.05);
+    }
+    .cart-header, .cart-row {
+        align-items: center;
+    }
+    .cart-header {
+        background-color: #e9ecef;
+        padding: 20px;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    .cart-row {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+        transition: box-shadow 0.3s;
+    }
+    .cart-row:hover {
+        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    }
+    .product-image {
+        width: 100px;
+        height: auto;
+        border-radius: 12px;
+    }
+    .quantity-controls img, .quantity-controls i {
+        cursor: pointer;
+        margin-left: 12px;
+        transition: transform 0.2s;
+    }
+    .quantity-controls img:hover, .quantity-controls i:hover {
+        transform: scale(1.2);
+    }
+    .summary-table th, .summary-table td {
+        vertical-align: middle;
+        font-size: 1.1rem;
+    }
+    .cart-header div, .cart-row div {
+        padding: 0 10px;
+    }
+    .empty-cart-message {
+        padding: 60px 20px;
+        text-align: center;
+    }
+    .empty-cart-message h4 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+    .empty-cart-message .btn {
+        font-size: 1.1rem;
+        padding: 12px 24px;
+    }
+    @media (max-width: 768px) {
+        .cart-container {
+            padding: 40px 20px;
+        }
+        .product-image {
+            width: 80px;
+        }
+        .cart-header, .cart-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .cart-header div, .cart-row div {
+            padding: 5px 0;
+        }
+        .checkout-btn, .continue-btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
 
-                <br>
-                <br>
-                <table class="table">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="cart-container">
+                <!-- Continue Shopping Button -->
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <a class="btn btn-outline-dark continue-btn" href="{% url 'store' %}">
+                        <i class="fas fa-arrow-left me-2"></i> Continue Shopping
+                    </a>
+                    
+                    <!-- Order Summary -->
+                    <div class="text-end">
+                        <h4 class="mb-2">Order Summary</h4>
+                        <p class="mb-1">Items: <strong>{{ order.get_cart_quantity }}</strong></p>
+                        <p class="mb-3">Total: <strong>${{ order.get_cart_total }}</strong></p>
+                        <a class="btn btn-success checkout-btn" href="{% url 'checkout' %}">
+                            Checkout <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
 
-                    <tr>
-                        <th><h5>Items: <strong>{{order.get_cart_quantity}}</strong></h5></th>
-                        <th><h5>Total:<strong> ${{order.get_cart_total}}</strong></h5></th>
-                        <th>
-                            <a  style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' %}">Checkout</a>
-                        </th>
-                    </tr>
+                <!-- Cart Items Header -->
+                <div class="cart-header d-flex flex-wrap">
+                    <div class="flex-grow-2">Product</div>
+                    <div class="flex-grow-1 text-center">Price</div>
+                    <div class="flex-grow-1 text-center">Quantity</div>
+                    <div class="flex-grow-1 text-end">Total</div>
+                </div>
 
-                </table>
+                <!-- Cart Items -->
+                {% for item in items %}
+                <div class="cart-row d-flex flex-wrap">
+                    <!-- Product Image and Name -->
+                    <div class="flex-grow-2 d-flex align-items-center mb-3 mb-md-0">
+                        <img class="product-image me-4" src="/media/{{ item.product.image }}" alt="{{ item.product.name }}">
+                        <span class="fs-5">{{ item.product.name }}</span>
+                    </div>
+                    
+                    <!-- Price -->
+                    <div class="flex-grow-1 text-center mb-3 mb-md-0">
+                        ${{ item.product.price }}
+                    </div>
+                    
+                    <!-- Quantity Controls -->
+                    <div class="flex-grow-1 text-center mb-3 mb-md-0">
+                        <span class="fs-5">{{ item.quantity }}</span>
+                        <div class="quantity-controls d-inline-block ms-3">
+                            <a href="{% url 'click' item.id %}" title="Increase Quantity">
+                                <i class="fas fa-plus-circle fa-lg text-primary"></i>
+                            </a>
+                            <a href="{% url 'unclick' item.id %}" title="Decrease Quantity">
+                                <i class="fas fa-minus-circle fa-lg text-danger"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Total -->
+                    <div class="flex-grow-1 text-end mb-3 mb-md-0">
+                        <strong>${{ item.get_total }}</strong>
+                    </div>
+                </div>
+                {% endfor %}
 
+                <!-- Empty Cart Message -->
+                {% if not items %}
+                <div class="empty-cart-message">
+                    <h4>Your cart is empty!</h4>
+                    <a href="{% url 'store' %}" class="btn btn-primary">Start Shopping</a>
+                </div>
+                {% endif %}
             </div>
-
-            <br>
-            <div class="box-element">
-
-                <div class="cart-row">
-                    <div style="flex:2"></div>
-                    <div style="flex:2"><strong>Item</strong></div>
-                    <div style="flex:1"><strong>Price</strong></div>
-                    <div style="flex:1"><strong>Quantity</strong></div>
-                    <div style="flex:1"><strong>Total</strong></div>
+        </div>
+    </div>
 </div>
 
-                    {% for items in items %}
-                <div class="cart-row">
+<!-- Bootstrap JS for interactive components -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-                    <div style="flex:2"><img class="row-image" src="/images/{{items.product.image}}"></div>
-                    <div style="flex:2"><p>{{items.product.name}}</p></div>
-                    <div style="flex:1"><p>${{items.product.price}}</p></div>
-                    <div style="flex:1">
-
-                        <p class="quantity">{{items.quantity}}</p>
-                        <div class="quantity">
-                            <a href="{% url 'click' items.id %}">
-                            <img class="chg-quantity" src="{% static  'images/arrow-up.png' %}"></a>
-                            <a href="{% url 'unclick' items.id %}">
-                            <img class="chg-quantity" src="{% static  'images/arrow-down.png' %}"></a>
-                        </div>
-
-
-                    </div>
-                    <div style="flex:1"><p>${{items.get_total}}</p></div>
-                </div>
-{% endfor %}
-            </div></div>
-
-        </div>
-
-    </div>
 {% endblock content %}
->
