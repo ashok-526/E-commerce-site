@@ -567,7 +567,7 @@
         "kind": 5,
         "importPath": "e_commerce.settings",
         "description": "e_commerce.settings",
-        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/4.2/howto/static-files/\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nSTATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]",
+        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/4.2/howto/static-files/\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nif DEBUG:\n    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]",
         "detail": "e_commerce.settings",
         "documentation": {}
     },
@@ -576,7 +576,7 @@
         "kind": 5,
         "importPath": "e_commerce.settings",
         "description": "e_commerce.settings",
-        "peekOfCode": "TIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/4.2/howto/static-files/\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nSTATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]",
+        "peekOfCode": "TIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/4.2/howto/static-files/\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nif DEBUG:\n    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\nelse:",
         "detail": "e_commerce.settings",
         "documentation": {}
     },
@@ -585,7 +585,7 @@
         "kind": 5,
         "importPath": "e_commerce.settings",
         "description": "e_commerce.settings",
-        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/4.2/howto/static-files/\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nSTATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')",
+        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/4.2/howto/static-files/\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nif DEBUG:\n    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\nelse:\n    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')",
         "detail": "e_commerce.settings",
         "documentation": {}
     },
@@ -594,7 +594,7 @@
         "kind": 5,
         "importPath": "e_commerce.settings",
         "description": "e_commerce.settings",
-        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/4.2/howto/static-files/\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nSTATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')",
+        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/4.2/howto/static-files/\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nif DEBUG:\n    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\nelse:\n    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')",
         "detail": "e_commerce.settings",
         "documentation": {}
     },
@@ -603,7 +603,7 @@
         "kind": 5,
         "importPath": "e_commerce.settings",
         "description": "e_commerce.settings",
-        "peekOfCode": "STATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nSTATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\n# Default primary key field type\n# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "peekOfCode": "STATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nif DEBUG:\n    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\nelse:\n    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\n# Default primary key field type\n# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
         "detail": "e_commerce.settings",
         "documentation": {}
     },
@@ -612,25 +612,7 @@
         "kind": 5,
         "importPath": "e_commerce.settings",
         "description": "e_commerce.settings",
-        "peekOfCode": "MEDIA_URL = '/media/'\nSTATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\n# Default primary key field type\n# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
-        "detail": "e_commerce.settings",
-        "documentation": {}
-    },
-    {
-        "label": "STATICFILES_DIRS",
-        "kind": 5,
-        "importPath": "e_commerce.settings",
-        "description": "e_commerce.settings",
-        "peekOfCode": "STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\n# Default primary key field type\n# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
-        "detail": "e_commerce.settings",
-        "documentation": {}
-    },
-    {
-        "label": "STATIC_ROOT",
-        "kind": 5,
-        "importPath": "e_commerce.settings",
-        "description": "e_commerce.settings",
-        "peekOfCode": "STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\n# Default primary key field type\n# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "peekOfCode": "MEDIA_URL = '/media/'\nif DEBUG:\n    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\nelse:\n    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\n# Default primary key field type\n# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
         "detail": "e_commerce.settings",
         "documentation": {}
     },
