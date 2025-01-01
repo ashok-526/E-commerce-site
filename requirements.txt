@@ -13,4 +13,5 @@ stripe
 typing_extensions
 urllib3
 wheel
+whitenoise
 
